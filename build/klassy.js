@@ -1,10 +1,12 @@
 function setup() {
 
-  const CLUSTERSIZE = 5; // how many words to drop at once
-  const INTERVAL = 760; // duration of word animation
-  const SHOTSPEED = 20; // how fast to update shot pos
-  const DELTA = 25; // how many pixels moved by each css animation
-  const INCREMENT = SHOTSPEED * DELTA / INTERVAL;
+  // these may end up as const in final version
+  // they are variables now so we can test different settings
+  let CLUSTERSIZE = 5; // how many words to drop at once
+  let INTERVAL = 760; // duration of word animation
+  let SHOTSPEED = 20; // how fast to update shot pos
+  let DELTA = 25; // how many pixels moved by each css animation
+  let INCREMENT = SHOTSPEED * DELTA / INTERVAL;
   // increment is how many pixels in y word has moved by css animation
   // this number is not reflected in w.poy
   // so we update it in moveshot
