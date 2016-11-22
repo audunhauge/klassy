@@ -8,13 +8,17 @@
     <body>
         <div id="main">
           <div id="firebutton"></div>
-          <div id="gun"> </div>
           <div id="round"> </div>
-          <div id="mask"></div>
+          <!-- the gun is movable, snaps to selected kategory -->
+          <div id="gun">
+            <div id="barrel"> </div>
+            <div id="chassis"> </div>
+          </div>  
+          <div id="mask"></div>        
         </div>   
         <div id="messages"></div>
         <div id="config">
-            
+            Kanon plasseres over ammo <input id="movegun" type="checkbox">
         </div>
         <div id="textmeasure">
             <!-- used to measure text size of all words -->

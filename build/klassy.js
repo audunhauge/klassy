@@ -1,7 +1,13 @@
 function setup() {
 
+  const CLUSTERSIZE = 5; // how many words to drop at once
   const INTERVAL = 760; // duration of word animation
   const SHOTSPEED = 20; // how fast to update shot pos
+  const DELTA = 25; // how many pixels moved by each css animation
+  const INCREMENT = SHOTSPEED * DELTA / INTERVAL;
+  // increment is how many pixels in y word has moved by css animation
+  // this number is not reflected in w.poy
+  // so we update it in moveshot
 
   let divMain = document.getElementById("main");
   let divTextMeasure = document.getElementById("textmeasure");
@@ -9,9 +15,12 @@ function setup() {
   let divFire = document.getElementById("firebutton");
   let divConfig = document.getElementById("config");
   let divMessages = document.getElementById("messages");
+  let divGun = document.getElementById("gun");
+
+  let inpMoveGun = document.getElementById("movegun");
 
   // these two must be Object as we append extra props
-  let divGun = document.getElementById("gun");
+  let divBarrel = document.getElementById("barrel");
   let divRound = document.getElementById("round");
 
   let klasses = {};
@@ -44,7 +53,11 @@ function setup() {
   let dropping = []; // words that are on stage and dropping
 
   spnWords.forEach(w => {
-    w.alive = false;w.pox = 0;w.poy = 0;w.h = 20;
+    w.alive = false;
+    w.pox = 0;
+    w.poy = 0;
+    w.h = 20; // width is set in loop above, calculated from word width
+    w.prevpos = 0; // updated at end of css animation     
   });
   // add extra props to each node - needed for animation
 
@@ -83,15 +96,16 @@ function setup() {
   divFire.addEventListener("mousedown", fireRound);
 
   function animation(e) {
-    // overriding w:NodeList so we can add pox,poy
-    let delta = [roll(-50, 50), roll(-50, 50), roll(-50, 50)];
+    // random x-direction  
+    let delta = range(0, CLUSTERSIZE);
+    delta = delta.map(e => roll(-50, 50));
     delta.forEach((d, i) => {
       let w = dropping[i];
       if (w && w.pox + d > 500 - w.w) {
-        delta[i] = -20;
+        delta[i] = -20; // avoid right edge
       }
       if (w && w.pox + d < 10) {
-        delta[i] = 20;
+        delta[i] = 20; // avoid left edge
       }
     });
     let i = 0;
@@ -105,7 +119,8 @@ function setup() {
           easing: 'linear',
           fill: 'forwards'
         });
-        w.poy += 25;
+        w.poy = w.prevpos + 25;
+        w.prevpos = w.poy;
         w.pox += d;
 
         // if the word has fallen too far
@@ -126,13 +141,14 @@ function setup() {
   }
 
   function restart() {
-    dropping = shuffle(spnWords).slice(0, 3);
+    dropping = shuffle(spnWords).slice(0, CLUSTERSIZE);
     let i = 0;
-    let free = 500 / 3;
+    let free = 500 / CLUSTERSIZE;
     for (let w of dropping) {
       let txtw = w.textWidth;
       w.pox = free * i + roll(0, free - txtw);
-      w.poy = -150 * i + roll(-20, -10);
+      w.poy = -50 * i + roll(-20, -10);
+      w.prevpos = w.poy;
       w.alive = true;
       if (w.myanim) w.myanim.cancel();
       w.style.top = "-200px";
@@ -147,21 +163,32 @@ function setup() {
     let kats = Array.from(document.querySelectorAll("#mask > span"));
     kats.forEach(k => k.classList.remove("active"));
     t.classList.add("active");
+    if (inpMoveGun.checked) {
+      let startx = divGun.offsetLeft;
+      let finalx = t.offsetLeft + t.offsetWidth / 2 - 40;
+      divGun.animate([{ left: startx + "px", offset: 0 }, { left: finalx + "px", offset: 1 }], {
+        duration: 90,
+        fill: 'forwards'
+      });
+    }
   }
 
   function fireRound(e) {
+    let gunBoundingBox = divGun.getBoundingClientRect();
+    let gunx = gunBoundingBox.left + gunBoundingBox.width / 2 - 18;
+    let guny = gunBoundingBox.bottom;
     let mx = e.clientX;
     let my = e.clientY;
-    let dx = 250 - mx;
-    let dy = 500 - my;
+    let dx = gunx - mx;
+    let dy = guny - my;
     let angle = Math.atan2(dy, -dx);
-    divGun.angle = angle;
+    divBarrel.angle = angle;
     angle = 90 - 180 * angle / Math.PI;
-    divGun.style.transform = "rotate(" + angle + "deg)";
-    divRound.pox = 250;
-    divRound.poy = 450;
-    divRound.vx = 6 * Math.cos(divGun.angle);
-    divRound.vy = 6 * Math.sin(divGun.angle);
+    divBarrel.style.transform = "rotate(" + angle + "deg)";
+    divRound.pox = gunx;
+    divRound.poy = guny - 24;
+    divRound.vx = 6 * Math.cos(divBarrel.angle);
+    divRound.vy = 6 * Math.sin(divBarrel.angle);
     divRound.alive = true;
   }
 
@@ -173,6 +200,7 @@ function setup() {
       divRound.style.left = divRound.pox + "px";
     }
     for (let w of dropping) {
+      w.poy += INCREMENT; // adjustment for css animation movement
       if (overlap(w, divRound)) {
         if (w.klass === divRound.ammotype) {
           w.alive = false;
@@ -234,4 +262,10 @@ function shuffle(arr) {
 
 function overlap(a, b) {
   return a.pox > b.pox - a.w && a.pox < b.pox + b.w && a.poy > b.poy - a.h && a.poy < b.poy + b.h;
+}
+
+function range(lo, hi) {
+  let a = new Array(hi - lo);
+  a.fill(1);
+  return a.map((e, i) => lo + i);
 }
