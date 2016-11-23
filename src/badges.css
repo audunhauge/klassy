@@ -1,0 +1,30 @@
+div.badge {
+    position:relative;
+    background-image: url("blankbadge.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    width:60px;
+    height:60px;
+    font-size:0.9em;
+}
+
+div.badge.ok:after {
+    content: "v";
+    text-align:center;
+    display:block;
+    position:absolute;
+    width: 25%;
+    height: 25%;
+    right: 0%;
+    top:10%;
+    border-radius: 50%;
+    background: green;
+    color: white;
+}
+
+div.badge > span {
+    position: absolute;
+    left:25%;
+    top:30%;
+    color:white;
+}

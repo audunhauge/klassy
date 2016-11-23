@@ -126,8 +126,6 @@ div.gold {
 #messages {
     position:absolute;
     text-align: center;
-    vertical-align: center;
-    font-size: 3em;
     border-radius: 10%;
     border: solid gold 2px;
     z-index: 10;
