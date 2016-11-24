@@ -1,27 +1,45 @@
 {
-  "MatVekster": {
-      "badge":"Mat",
-      "grupper": {
-        "grønnsaker":"gulerot,kål,salat,paprika,spinat",
-        "sopp":"kantarell,trøffel,sjampingjong,morkel",
-        "frukt":"eple,pærer,appelsin,banan",
-        "nøtter":"mandel,pistasj,valnøtt,pekan",
-        "bær":"multe,rips,bringebær,solbær,jordbær,krekling"
-      }
-  },
-  "Dyr":{
-      "badge":"Dyr",
-      "grupper": {
-        "klovdyr":"sau,geit",
-        "mårdyr":"mink,mår,røyskatt",
-        "gnagere":"mus,rotte,vånd"
-      }
-  },
-  "Fisk": {
-      "badge":"Fisk",
-      "grupper": {
-        "ferkvann":"ørret,røye",
-        "saltvann":"torsk,sei,lyr"
-      }
+  "sti": {
+    "Basis":"Matvekster,Dyr,Fisk",
+    "Sjø og land":"Fisk,Dyr"
   }
+  "oppgaver": [
+    "MatVekster": {
+      "badge": {
+        "text": "Mat",
+        "klass": "green",
+        "time": 172
+      },
+      "grupper": {
+        "grønnsaker": "gulerot,kål,salat,paprika,spinat",
+        "sopp": "kantarell,trøffel,sjampingjong,morkel",
+        "frukt": "eple,pærer,appelsin,banan",
+        "nøtter": "mandel,pistasj,valnøtt,pekan",
+        "bær": "multe,rips,bringebær,solbær,jordbær,krekling"
+      }
+    },
+    "Dyr": {
+      "badge": {
+        "text": "Dyr",
+        "klass": "red",
+        "time": 122
+      },
+      "grupper": {
+        "klovdyr": "sau,geit",
+        "mårdyr": "mink,mår,røyskatt",
+        "gnagere": "mus,rotte,vånd"
+      }
+    },
+    "Fisk": {
+      "badge": {
+        "text": "Fisk",
+        "klass": "blue",
+        "time": 42
+      },
+      "grupper": {
+        "ferkvann": "ørret,røye",
+        "saltvann": "torsk,sei,lyr"
+      }
+    }
+  ]
 }
