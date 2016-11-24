@@ -20,7 +20,7 @@ function setup():void {
 function behandle(data) {
   let lessons = shuffle(Object.keys(data));
   let selected = lessons[0];
-  startGame(data[selected]);
+  startGame(data[selected].grupper);
 }
 
 function startGame(klasses):void {
@@ -280,14 +280,35 @@ function startGame(klasses):void {
           if (spnWords.length === 0) {
             let s = '<h1>Winner</h1>'
             + '<h2>Dine medaljer</h2>'
-            + '<div id="lego" class="badge ok"><span id="msg">fisk</span></div>';
             divMessages.innerHTML =s;
+            divMessages.appendChild(makeBadge("fisk",{extra:"ok",timing:12}));
             divMessages.classList.add("show");
           }
         }
       }
     }
-  } 
+  }
+
+ 
+
+
+  function makeBadge(text:string, frills:Object = {extra:"", timing:0, checked:false }):HTMLElement {
+    let badge = document.createElement('div');
+    badge.className = 'badge';
+    let inner = '<span class="info">' + text + '</span>';
+    if (frills.timing) {
+      // the badge has a time achivement
+      inner += '<span class="timing">'+ frills.timing + 's</span>';
+    }
+    if (frills.extra) {
+      let extra = frills.extra.split(',');
+      badge.classList.add(... extra);
+    }
+    badge.innerHTML = inner;
+    return badge;
+  }
+
+
 }
 
 

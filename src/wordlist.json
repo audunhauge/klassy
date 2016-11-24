@@ -1,18 +1,27 @@
 {
   "MatVekster": {
-      "grønnsaker":"gulerot,kål,salat,paprika,spinat",
-      "sopp":"kantarell,trøffel,sjampingjong,morkel",
-      "frukt":"eple,pærer,appelsin,banan",
-      "nøtter":"mandel,pistasj,valnøtt,pekan",
-      "bær":"multe,rips,bringebær,solbær,jordbær,krekling"
+      "badge":"Mat",
+      "grupper": {
+        "grønnsaker":"gulerot,kål,salat,paprika,spinat",
+        "sopp":"kantarell,trøffel,sjampingjong,morkel",
+        "frukt":"eple,pærer,appelsin,banan",
+        "nøtter":"mandel,pistasj,valnøtt,pekan",
+        "bær":"multe,rips,bringebær,solbær,jordbær,krekling"
+      }
   },
   "Dyr":{
-      "klovdyr":"sau,geit",
-      "mårdyr":"mink,mår,røyskatt",
-      "gnagere":"mus,rotte,vånd"
+      "badge":"Dyr",
+      "grupper": {
+        "klovdyr":"sau,geit",
+        "mårdyr":"mink,mår,røyskatt",
+        "gnagere":"mus,rotte,vånd"
+      }
   },
   "Fisk": {
-      "ferkvann":"ørret,røye",
-      "saltvann":"torsk,sei,lyr"
+      "badge":"Fisk",
+      "grupper": {
+        "ferkvann":"ørret,røye",
+        "saltvann":"torsk,sei,lyr"
+      }
   }
 }
