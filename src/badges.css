@@ -59,7 +59,8 @@ div.badge > span.info {
 
 div.badge > span.timing {
     position: absolute;
-    opacity: 0.7;
+    z-index:-10;
+    opacity: 0.5;
     display:block;
     font-size:0.8em;
     text-align: center;
@@ -71,4 +72,9 @@ div.badge > span.timing {
     color:white;
     background: gray;
     border: solid darkslategray 2px;
+}
+
+#badgebox {
+    display:flex;
+    justify-content: center;
 }

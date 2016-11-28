@@ -1,16 +1,16 @@
 {
-  "sti": {
+  "path": {
     "Basis":"Matvekster,Dyr,Fisk",
     "Sjø og land":"Fisk,Dyr"
-  }
-  "oppgaver": [
-    "MatVekster": {
+  },
+  "tasks":{
+    "MatVekster-001": {
       "badge": {
         "text": "Mat",
         "klass": "green",
-        "time": 172
+        "par": 172
       },
-      "grupper": {
+      "groups": {
         "grønnsaker": "gulerot,kål,salat,paprika,spinat",
         "sopp": "kantarell,trøffel,sjampingjong,morkel",
         "frukt": "eple,pærer,appelsin,banan",
@@ -18,28 +18,58 @@
         "bær": "multe,rips,bringebær,solbær,jordbær,krekling"
       }
     },
-    "Dyr": {
+    "Smådyr-001": {
       "badge": {
         "text": "Dyr",
         "klass": "red",
-        "time": 122
+        "par": 122
       },
-      "grupper": {
+      "groups": {
         "klovdyr": "sau,geit",
         "mårdyr": "mink,mår,røyskatt",
         "gnagere": "mus,rotte,vånd"
       }
     },
-    "Fisk": {
+    "Fisk-001": {
       "badge": {
         "text": "Fisk",
         "klass": "blue",
-        "time": 42
+        "par": 42
       },
-      "grupper": {
+      "groups": {
         "ferkvann": "ørret,røye",
         "saltvann": "torsk,sei,lyr"
       }
-    }
-  ]
+    },
+    "EngelskTysk-001": {
+      "badge": {
+        "text": "Språk",
+        "klass": "blue",
+        "par": 42
+      },
+       "groups": {
+        "Stol": "Stuhl,Chair",
+        "Hus": "Haus,House",
+        "Mus": "Maus,Mouse",
+        "Hund": "Hund,Dog",
+        "Katt": "Katze,Cat",
+        "Man": "Mann,Man"
+      }
+    },
+    "Tysk-001": {
+      "badge": {
+        "text": "Tysk1",
+        "klass": "blue",
+        "par": 42
+      },
+      "groups": {
+        "Stol": "Stuhl",
+        "Hus": "Haus",
+        "Mus": "Maus",
+        "Hund": "Hund",
+        "Katt": "Katze",
+        "Man": "Mann"
+      }
+     }
+  }
 }

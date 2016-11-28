@@ -1,5 +1,30 @@
 // @flow
 
+type User = { 
+  firstname:string, 
+  lastname:string, 
+  path:Object, 
+  completed:Object, 
+  xp:number 
+};
+
+class Badge {
+  title:string;
+  uri: string;
+  klass:string;
+  time:number;
+  par:number;
+
+  constructor(title:string, uri:string, klass:string, time:number, par:number) {
+    this.title = title;
+    this.uri = uri;
+    this.klass = klass;
+    this.time = time;
+    this.par = par;
+  } 
+
+}
+
 function setup():void {
   const url = "wordlist.json";
   fetch(url).then(r => r.json())
@@ -8,22 +33,74 @@ function setup():void {
     console.log("Klarte ikke å laste filen wordlist.json.");
     console.log("Bruker demo matvarer.");
     let klasses = {};
-    klasses["grønnsak"] = "gulerot,brokkoli,kål,salat,neper".split(',');
-    klasses["sopp"] = "kantarell,morkel,trøffel".split(',');
-    klasses["bær"] = "rips,multe,solbær,bringebær".split(',');
-    klasses["frukt"] = "eple,pærer,appelsin".split(',');
-    klasses["nøtter"] = "mandler,pistasj,hasselnøtt".split(',');
-    startGame(klasses);
+    let user = {firstname:"test", lastname:"",completed:{}, path:{},xp:0};
+    klasses["grønnsak"] = "gulerot,brokkoli,kål,salat,neper";
+    klasses["sopp"] = "kantarell,morkel,trøffel";
+    klasses["bær"] = "rips,multe,solbær,bringebær";
+    klasses["frukt"] = "eple,pærer,appelsin";
+    klasses["nøtter"] = "mandler,pistasj,hasselnøtt";
+    startGame(klasses, 'Fruk', user);
   });
 }
 
-function behandle(data) {
-  let lessons = shuffle(Object.keys(data));
-  let selected = lessons[0];
-  startGame(data[selected].grupper);
+function behandle(wordlist:Object) {
+  let userinfo:any = localStorage.getItem("klassy_game");
+  let user:User;
+  if (userinfo !== null) {
+    user = JSON.parse(userinfo);
+    choosePath(wordlist, user);
+  } else {
+    // no user registered
+    createAccount(wordlist);
+  }
 }
 
-function startGame(klasses):void {
+function choosePath(wordlist, user) {
+  let path = wordlist.path;
+  let tasks = wordlist.tasks;
+  let lessons:string[] = shuffle(Object.keys(tasks));
+  let todo:string[] = lessons.filter( e => user.completed[e] === undefined);
+  let selected:string;
+  if (todo.length > 0) {
+     selected = todo[0];
+  } else {
+     selected = lessons[0];
+  }
+  startGame(tasks[selected], selected, user ) ;
+}
+
+
+function createAccount(wordlist):void {
+  // create and show a GUI for registration
+  // testing without first 
+  let divMessages  = document.getElementById("messages");
+  let divInfo  = document.getElementById("info");
+  let form = `<form>
+    <br>Firstname <input id="first" type="text">
+    <br>Lastname <input id="last" type="text">
+    <br><button id="save" type="button">Save</button>
+  </form>`;  
+  divInfo.innerHTML = form;
+  divMessages.classList.add("show");
+  let btnSave = document.getElementById("save");
+  btnSave.addEventListener("click", saveUser);
+  function saveUser() {
+    let first:string = (document.getElementById("first"):any).value;
+    let last:string = (document.getElementById("last"):any).value;
+    let user:User = {firstname:first, lastname:last, path:{}, completed:{}, xp:0};
+    localStorage.setItem("klassy_game",JSON.stringify(user));
+    divMessages.classList.remove("show");
+    choosePath(wordlist,user);
+  }
+}
+
+function startGame(task, selected, user:User):void {
+
+  let startTime = (new Date()).getTime();      // test if we finish under par
+  let klasses = task.groups;
+  let badge = task.badge;
+  let deltaXP = 0;          // xp earned this game
+
   // these may end up as const in final version
   // they are variables now so we can test different settings
   let CLUSTERSIZE = 5;  // how many words to drop at once
@@ -41,6 +118,8 @@ function startGame(klasses):void {
   let divFire  = document.getElementById("firebutton");
   let divConfig  = document.getElementById("config");
   let divMessages  = document.getElementById("messages");
+  let divBadgebox  = document.getElementById("badgebox");
+  let divInfo  = document.getElementById("info");
 
 
   let inpMoveGun =  document.getElementById("movegun");
@@ -178,6 +257,7 @@ function startGame(klasses):void {
            w.style.top = "-400px";
            w.style.display = "none";
            w.style.zIndex = -2;
+           deltaXP -= 1;
         }
       } 
     }
@@ -256,10 +336,11 @@ function startGame(klasses):void {
       w.poy += INCREMENT;           // adjustment for css animation movement
       if (overlap(w,divRound)) {
         if (w.klass === divRound.ammotype) {
+          deltaXP += 2;
           w.alive = false;
           w.style.display = "none";
           w.done = true;
-          w.myanim.cancel();       // stop any animation on word
+          if (w.myanim) w.myanim.cancel();       // stop any animation on word
           // give gold
           let spnGold = document.createElement("div");
           spnGold.className = "gold";
@@ -278,34 +359,54 @@ function startGame(klasses):void {
             restartCluster();
           }
           if (spnWords.length === 0) {
-            let s = '<h1>Winner</h1>'
-            + '<h2>Dine medaljer</h2>'
-            divMessages.innerHTML =s;
-            divMessages.appendChild(makeBadge("fisk",{extra:"ok",timing:12}));
-            divMessages.classList.add("show");
+           registerWinner(badge);
           }
         }
       }
     }
   }
 
+  function registerWinner(badge): void {
+    user.xp += Math.max(0,deltaXP);
+    let timeUsed = Math.floor(((new Date()).getTime() - startTime) / 1000);
+    let earnedBadge:Badge = new Badge(badge.text, selected, badge.klass, timeUsed, badge.par);
+    user.completed[selected] = earnedBadge;
+    localStorage.setItem("klassy_game",JSON.stringify(user));
+    let s = `<h1>Winner ${user.firstname}</h1>`
+     + `Du brukte ${timeUsed.toFixed(0)} sekunder. `
+     + `Du har tjent ${deltaXP} `
+     + `og har nå ${user.xp} XP`
+     + '<h2>Dine medaljer</h2>';
+    divInfo.innerHTML = s;
+    for (let badgeUri in user.completed) {
+      let badge = user.completed[badgeUri];
+      let timing = 0;
+      if (badge.time < badge.par) {
+        timing = badge.time;
+      }
+      divBadgebox.appendChild(makeBadge(badge, { extra: "", timing: timing }));
+    }
+    divMessages.classList.add("show");
+    
+  }
+
  
 
 
-  function makeBadge(text:string, frills:Object = {extra:"", timing:0, checked:false }):HTMLElement {
-    let badge = document.createElement('div');
-    badge.className = 'badge';
-    let inner = '<span class="info">' + text + '</span>';
+  function makeBadge(badge:Object, frills:Object = {extra:"", timing:"", checked:false }):HTMLElement {
+    let divBadge = document.createElement('div');
+    divBadge.className = 'badge ' + badge.klass;
+    let inner = '<span class="info">' + badge.title + '</span>';
     if (frills.timing) {
       // the badge has a time achivement
       inner += '<span class="timing">'+ frills.timing + 's</span>';
     }
     if (frills.extra) {
       let extra = frills.extra.split(',');
-      badge.classList.add(... extra);
+      divBadge.classList.add(... extra);
     }
-    badge.innerHTML = inner;
-    return badge;
+    divBadge.innerHTML = inner;
+    return divBadge;
   }
 
 
@@ -330,7 +431,7 @@ function roll(lo:number, hi:number=NaN):number {
 }
 
 // shuffles an array
-function shuffle(arr:Array<Object>):Array<Object> {
+function shuffle(arr:Array<any>):Array<any> {
    for (let i=arr.length-1; i>0; i--) {
      let j = Math.round(Math.random()*i);
      let tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
