@@ -72,7 +72,6 @@ function choosePath(wordlist, user) {
 
 function createAccount(wordlist):void {
   // create and show a GUI for registration
-  // testing without first 
   let divMessages  = document.getElementById("messages");
   let divInfo  = document.getElementById("info");
   let form = `<form>
@@ -106,7 +105,7 @@ function startGame(task, selected, user:User):void {
   let CLUSTERSIZE = 5;  // how many words to drop at once
   let INTERVAL = 760;   // duration of word animation
   let SHOTSPEED = 20;   // how fast to update shot pos
-  let DELTA = 25;       // how many pixels moved by each css animation
+  let DELTA = 15;       // how many pixels moved by each css animation
   let INCREMENT = SHOTSPEED * DELTA / INTERVAL;
   // increment is how many pixels in y word has moved by css animation
   // this number is not reflected into w.poy by css
@@ -239,14 +238,14 @@ function startGame(task, selected, user:User):void {
         if (w.pox )
         w.myanim = w.animate([
           { top: w.poy + "px", left: w.pox + "px", offset: 0 },
-          { top: w.poy + 25 + "px", left: w.pox + d + "px", offset: 1 },
+          { top: w.poy + DELTA + "px", left: w.pox + d + "px", offset: 1 },
         ],
           {
             duration: INTERVAL,
             easing: 'linear',
             fill: 'forwards'
           })
-        w.poy = w.prevpos + 25;
+        w.poy = w.prevpos + DELTA;
         w.prevpos = w.poy;
         w.pox += d
         
