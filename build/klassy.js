@@ -9,8 +9,9 @@ class Badge {
     this.time = time;
     this.par = par;
   }
-
 }
+
+let wordlist; // global so we can restart without refetching data
 
 function setup() {
   const url = "wordlist.json";
@@ -28,19 +29,20 @@ function setup() {
   });
 }
 
-function behandle(wordlist) {
+function behandle(data) {
+  wordlist = data;
   let userinfo = localStorage.getItem("klassy_game");
   let user;
   if (userinfo !== null) {
     user = JSON.parse(userinfo);
-    choosePath(wordlist, user);
+    choosePath(user);
   } else {
     // no user registered
-    createAccount(wordlist);
+    createAccount();
   }
 }
 
-function choosePath(wordlist, user) {
+function choosePath(user) {
   let path = wordlist.path;
   let tasks = wordlist.tasks;
   let lessons = shuffle(Object.keys(tasks));
@@ -54,7 +56,7 @@ function choosePath(wordlist, user) {
   startGame(tasks[selected], selected, user);
 }
 
-function createAccount(wordlist) {
+function createAccount() {
   // create and show a GUI for registration
   let divMessages = document.getElementById("messages");
   let divInfo = document.getElementById("info");
@@ -95,7 +97,7 @@ function startGame(task, selected, user) {
   // this number is not reflected into w.poy by css
   // so we update it in moveshot
 
-  let divMain = document.getElementById("main");
+  let divDropzone = document.getElementById("dropzone");
   let divTextMeasure = document.getElementById("textmeasure");
   let divMask = document.getElementById("mask");
   let divFire = document.getElementById("firebutton");
@@ -105,13 +107,24 @@ function startGame(task, selected, user) {
   let divInfo = document.getElementById("info");
 
   let inpMoveGun = document.getElementById("movegun");
+  let frmTesting = document.getElementById("testing");
 
   // these must be Object as we append extra props
   let divBarrel = document.getElementById("barrel");
   let divRound = document.getElementById("round");
   let divGun = document.getElementById("gun");
 
-  /**
+  /******************************************************************/
+  /************  parameter testing ******************************'***/
+  /**************************************************************
+  document.getElementById("testing").addEventListener("click", testing);
+  function testing(e:Event) {
+    CLUSTERSIZE = (document.getElementById("clustersize"):any).valueAsNumber;
+    SHOTSPEED = (document.getElementById("shotspeed"):any).valueAsNumber;
+    INTERVAL = (document.getElementById("anispeed"):any).valueAsNumber;
+  }
+   
+   /**
    * (1) A named function just to make commenting easier
    * Creates a span for each word, calcs width in px
    */
@@ -122,7 +135,7 @@ function startGame(task, selected, user) {
         spanO.id = k + "_" + o;
         spanO.klass = k;
         spanO.alive = false;
-        divMain.appendChild(spanO);
+        divDropzone.appendChild(spanO);
         spanO.innerHTML = o + " ";
 
         // measure size of word in pixels
@@ -137,7 +150,7 @@ function startGame(task, selected, user) {
 
   createWords();
 
-  let spnWords = Array.from(document.querySelectorAll("#main > span"));
+  let spnWords = Array.from(document.querySelectorAll("#dropzone > span"));
   // get all words placed on stage ready for dropping, convert NodeList to Array<Object>
   // flow wont allow adding new props to a class like NodeList
 
@@ -192,8 +205,8 @@ function startGame(task, selected, user) {
 
   restartCluster();
 
-  setInterval(animation, INTERVAL);
-  setInterval(moveshot, SHOTSPEED);
+  let anmWords = setInterval(animation, INTERVAL);
+  let anmShot = setInterval(moveshot, SHOTSPEED);
 
   divFire.addEventListener("mousedown", fireRound);
 
@@ -353,6 +366,22 @@ function startGame(task, selected, user) {
       divBadgebox.appendChild(makeBadge(badge, { extra: "", timing: timing }));
     }
     divMessages.classList.add("show");
+    let btnRestart = document.createElement('button');
+    divInfo.appendChild(btnRestart);
+    btnRestart.innerHTML = 'Nytt spill';
+    btnRestart.addEventListener("click", restartGame);
+  }
+
+  function restartGame(e) {
+    divMessages.classList.remove("show");
+    divDropzone.innerHTML = '<div id="firebutton"></div>';
+    divTextMeasure.innerHTML = '';
+    divMask.innerHTML = '';
+    divBadgebox.innerHTML = '';
+    // remove the timers set up by previous run thru game
+    clearInterval(anmShot);
+    clearInterval(anmWords);
+    choosePath(user);
   }
 
   function makeBadge(badge, frills = { extra: "", timing: "", checked: false }) {
