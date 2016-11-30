@@ -25,27 +25,33 @@ class Badge {
 }
 
 let wordlist:Object;    // global so we can restart without refetching data
+let subjects:Object;    // choice of subjects to learn
+let cache = {};         // remember file contents
 
 function setup():void {
-  const url = "wordlist.json";
+  const url = "index.json";
   fetch(url).then(r => r.json())
   .then(data => behandle(data))
   .catch(e => {
-    console.log("Klarte ikke å laste filen wordlist.json.");
-    console.log("Bruker demo matvarer.");
-    let klasses = {};
-    let user = {firstname:"test", lastname:"",completed:{}, path:{},xp:0};
-    klasses["grønnsak"] = "gulerot,brokkoli,kål,salat,neper";
-    klasses["sopp"] = "kantarell,morkel,trøffel";
-    klasses["bær"] = "rips,multe,solbær,bringebær";
-    klasses["frukt"] = "eple,pærer,appelsin";
-    klasses["nøtter"] = "mandler,pistasj,hasselnøtt";
-    startGame(klasses, 'Fruk', user);
+    failed(e, url);
   });
 }
 
+function failed(e, url) {
+  console.log(`Klarte ikke å laste filen ${url}.`);
+  console.log("Bruker demo matvarer.");
+  let klasses = {};
+  let user = { firstname: "test", lastname: "", completed: {}, path: {}, xp: 0 };
+  klasses["grønnsak"] = "gulerot,brokkoli,kål,salat,neper";
+  klasses["sopp"] = "kantarell,morkel,trøffel";
+  klasses["bær"] = "rips,multe,solbær,bringebær";
+  klasses["frukt"] = "eple,pærer,appelsin";
+  klasses["nøtter"] = "mandler,pistasj,hasselnøtt";
+  startGame(klasses, 'Fruk', user);
+}
+
 function behandle(data:Object) {
-  wordlist = data;
+  subjects = data;
   let userinfo:any = localStorage.getItem("klassy_game");
   let user:User;
   if (userinfo !== null) {
@@ -58,17 +64,71 @@ function behandle(data:Object) {
 }
 
 function choosePath(user) {
-  let path = wordlist.path;
-  let tasks = wordlist.tasks;
-  let lessons:string[] = shuffle(Object.keys(tasks));
-  let todo:string[] = lessons.filter( e => user.completed[e] === undefined);
-  let selected:string;
-  if (todo.length > 0) {
-     selected = todo[0];
+  let active, subscribed;
+  if (user.path && user.path.active) {
+    active = user.path.active;
+    subscribed = user.path.subscribed || [active];
+    chooseWordlist(user);
   } else {
-     selected = lessons[0];
+    getUserSelection(user);
   }
-  startGame(tasks[selected], selected, user ) ;
+}
+
+function chooseWordlist(user) {
+  let active = user.path.active;
+  let subject = subjects[active];
+  let url = subject.filename;
+  if (cache[url]) {
+    wordlist = cache[url];
+    pickAList(user);
+  } else fetch(url).then(r => r.json())
+    .then(data => {
+      wordlist = data;
+      cache[url] = data;
+      pickAList(user);
+    })
+    .catch(e => {
+      failed(e, url);
+    });
+}
+
+function pickAList(user) {
+  let tasks = wordlist.tasks;
+  let lessons: string[] = shuffle(Object.keys(tasks));
+  let todo: string[] = lessons.filter(e => user.completed[e] === undefined);
+  let selected: string;
+  if (todo.length > 0) {
+    selected = todo[0];
+  } else {
+    selected = lessons[0];
+  }
+  startGame(tasks[selected], selected, user);
+}
+
+function getUserSelection(user) {
+  let divMessages  = document.getElementById("messages");
+  let divInfo  = document.getElementById("info");
+  let subjectOptions = Object.keys(subjects).map(e => `<option value="${e}">`).join('');
+  let form = `<form>
+    Hello ${user.firstname} ${user.lastname}.
+    <br>Choose a lesson <input id="active" list="lessons">
+    <datalist id="lessons">
+      ${subjectOptions}
+    </datalist>
+    <br><button id="save" type="button">Save</button>
+  </form>`;  
+  divInfo.innerHTML = form;
+  divMessages.classList.add("show");
+  let btnSave = document.getElementById("save");
+  btnSave.addEventListener("click", saveUser);
+  function saveUser() {
+    let active:string = (document.getElementById("active"):any).value;
+    let subscribed = [active];
+    user.path = { active,subscribed};
+    localStorage.setItem("klassy_game",JSON.stringify(user));
+    divMessages.classList.remove("show");
+    chooseWordlist(user);
+  }
 }
 
 
@@ -91,7 +151,7 @@ function createAccount():void {
     let user:User = {firstname:first, lastname:last, path:{}, completed:{}, xp:0};
     localStorage.setItem("klassy_game",JSON.stringify(user));
     divMessages.classList.remove("show");
-    choosePath(wordlist,user);
+    choosePath(user);
   }
 }
 
@@ -124,24 +184,44 @@ function startGame(task, selected, user:User):void {
 
 
   let inpMoveGun =  document.getElementById("movegun");
+  let inpClusterSize =  document.getElementById("clustersize");
+  let inpShotSpeed =  document.getElementById("shotspeed");
+  let inpDropSpeed =  document.getElementById("dropspeed");
+  let inpDeltaY =  document.getElementById("deltay");
   let frmTesting = document.getElementById("testing");
+
+  // fill in starting values for testing form
+  (inpClusterSize:any).value = CLUSTERSIZE;
+  (inpShotSpeed:any).value = SHOTSPEED  ;
+  (inpDropSpeed:any).value = INTERVAL ;
+  (inpDeltaY:any).value = DELTA; 
 
   // these must be Object as we append extra props
   let divBarrel:Object = document.getElementById("barrel");
   let divRound:Object = document.getElementById("round");
   let divGun:Object =  document.getElementById("gun");
+
+  let anmWords = setInterval(animation, INTERVAL );
+  let anmShot = setInterval(moveshot, SHOTSPEED);
   
 
   /******************************************************************/
   /************  parameter testing ******************************'***/
-  /**************************************************************
-  document.getElementById("testing").addEventListener("click", testing);
+  /**************************************************************/
+  //*
+  document.getElementById("testing").addEventListener("change", testing);
   function testing(e:Event) {
-    CLUSTERSIZE = (document.getElementById("clustersize"):any).valueAsNumber;
-    SHOTSPEED = (document.getElementById("shotspeed"):any).valueAsNumber;
-    INTERVAL = (document.getElementById("anispeed"):any).valueAsNumber;
+    CLUSTERSIZE = (inpClusterSize:any).valueAsNumber;
+    SHOTSPEED = (inpShotSpeed:any).valueAsNumber;
+    INTERVAL = (inpDropSpeed:any).valueAsNumber;
+    DELTA = (inpDeltaY:any).valueAsNumber;
+    INCREMENT = SHOTSPEED * DELTA / INTERVAL;
+    clearInterval(anmWords);
+    clearInterval(anmShot);
+    anmWords = setInterval(animation, INTERVAL );
+    anmShot = setInterval(moveshot, SHOTSPEED);
   }
-
+  //*/
   
 
   /**
@@ -224,9 +304,6 @@ function startGame(task, selected, user:User):void {
   divRound.ammotype = "";
 
   restartCluster();
-
-  let anmWords = setInterval(animation, INTERVAL );
-  let anmShot = setInterval(moveshot, SHOTSPEED);
 
   divFire.addEventListener("mousedown", fireRound);
 

@@ -1,8 +1,4 @@
 {
-  "path": {
-    "Basis":"Matvekster,Dyr,Fisk",
-    "Sjø og land":"Fisk,Dyr"
-  },
   "tasks":{
     "MatVekster-001": {
       "badge": {
@@ -44,7 +40,7 @@
     "Matte-001": {
       "badge": {
         "text": "Matte",
-        "klass": "pink",
+        "klass": "black",
         "par": 42
       },
        "groups": {
@@ -57,7 +53,7 @@
     "EngelskTysk-001": {
       "badge": {
         "text": "Språk",
-        "klass": "blue",
+        "klass": "white",
         "par": 42
       },
        "groups": {
@@ -72,7 +68,7 @@
     "Tysk-001": {
       "badge": {
         "text": "Tysk1",
-        "klass": "blue",
+        "klass": "cyan",
         "par": 42
       },
       "groups": {

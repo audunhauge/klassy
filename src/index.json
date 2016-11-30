@@ -1,0 +1,12 @@
+{
+    "Basis": {
+     "filename":"basis.json",
+     "description":"Eksempel uten større læringsutbytte",
+     "minxp":0
+    },
+    "Matte": {
+      "filename":"matte.json",
+      "description":"Matte-oppgaver",
+      "minxp":50
+    }
+}

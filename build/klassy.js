@@ -12,25 +12,31 @@ class Badge {
 }
 
 let wordlist; // global so we can restart without refetching data
+let subjects; // choice of subjects to learn
+let cache = {}; // remember file contents
 
 function setup() {
-  const url = "wordlist.json";
+  const url = "index.json";
   fetch(url).then(r => r.json()).then(data => behandle(data)).catch(e => {
-    console.log("Klarte ikke å laste filen wordlist.json.");
-    console.log("Bruker demo matvarer.");
-    let klasses = {};
-    let user = { firstname: "test", lastname: "", completed: {}, path: {}, xp: 0 };
-    klasses["grønnsak"] = "gulerot,brokkoli,kål,salat,neper";
-    klasses["sopp"] = "kantarell,morkel,trøffel";
-    klasses["bær"] = "rips,multe,solbær,bringebær";
-    klasses["frukt"] = "eple,pærer,appelsin";
-    klasses["nøtter"] = "mandler,pistasj,hasselnøtt";
-    startGame(klasses, 'Fruk', user);
+    failed(e, url);
   });
 }
 
+function failed(e, url) {
+  console.log(`Klarte ikke å laste filen ${ url }.`);
+  console.log("Bruker demo matvarer.");
+  let klasses = {};
+  let user = { firstname: "test", lastname: "", completed: {}, path: {}, xp: 0 };
+  klasses["grønnsak"] = "gulerot,brokkoli,kål,salat,neper";
+  klasses["sopp"] = "kantarell,morkel,trøffel";
+  klasses["bær"] = "rips,multe,solbær,bringebær";
+  klasses["frukt"] = "eple,pærer,appelsin";
+  klasses["nøtter"] = "mandler,pistasj,hasselnøtt";
+  startGame(klasses, 'Fruk', user);
+}
+
 function behandle(data) {
-  wordlist = data;
+  subjects = data;
   let userinfo = localStorage.getItem("klassy_game");
   let user;
   if (userinfo !== null) {
@@ -43,7 +49,33 @@ function behandle(data) {
 }
 
 function choosePath(user) {
-  let path = wordlist.path;
+  let active, subscribed;
+  if (user.path && user.path.active) {
+    active = user.path.active;
+    subscribed = user.path.subscribed || [active];
+    chooseWordlist(user);
+  } else {
+    getUserSelection(user);
+  }
+}
+
+function chooseWordlist(user) {
+  let active = user.path.active;
+  let subject = subjects[active];
+  let url = subject.filename;
+  if (cache[url]) {
+    wordlist = cache[url];
+    pickAList(user);
+  } else fetch(url).then(r => r.json()).then(data => {
+    wordlist = data;
+    cache[url] = data;
+    pickAList(user);
+  }).catch(e => {
+    failed(e, url);
+  });
+}
+
+function pickAList(user) {
   let tasks = wordlist.tasks;
   let lessons = shuffle(Object.keys(tasks));
   let todo = lessons.filter(e => user.completed[e] === undefined);
@@ -54,6 +86,32 @@ function choosePath(user) {
     selected = lessons[0];
   }
   startGame(tasks[selected], selected, user);
+}
+
+function getUserSelection(user) {
+  let divMessages = document.getElementById("messages");
+  let divInfo = document.getElementById("info");
+  let subjectOptions = Object.keys(subjects).map(e => `<option value="${ e }">`).join('');
+  let form = `<form>
+    Hello ${ user.firstname } ${ user.lastname }.
+    <br>Choose a lesson <input id="active" list="lessons">
+    <datalist id="lessons">
+      ${ subjectOptions }
+    </datalist>
+    <br><button id="save" type="button">Save</button>
+  </form>`;
+  divInfo.innerHTML = form;
+  divMessages.classList.add("show");
+  let btnSave = document.getElementById("save");
+  btnSave.addEventListener("click", saveUser);
+  function saveUser() {
+    let active = document.getElementById("active").value;
+    let subscribed = [active];
+    user.path = { active, subscribed };
+    localStorage.setItem("klassy_game", JSON.stringify(user));
+    divMessages.classList.remove("show");
+    chooseWordlist(user);
+  }
 }
 
 function createAccount() {
@@ -75,7 +133,7 @@ function createAccount() {
     let user = { firstname: first, lastname: last, path: {}, completed: {}, xp: 0 };
     localStorage.setItem("klassy_game", JSON.stringify(user));
     divMessages.classList.remove("show");
-    choosePath(wordlist, user);
+    choosePath(user);
   }
 }
 
@@ -107,24 +165,46 @@ function startGame(task, selected, user) {
   let divInfo = document.getElementById("info");
 
   let inpMoveGun = document.getElementById("movegun");
+  let inpClusterSize = document.getElementById("clustersize");
+  let inpShotSpeed = document.getElementById("shotspeed");
+  let inpDropSpeed = document.getElementById("dropspeed");
+  let inpDeltaY = document.getElementById("deltay");
   let frmTesting = document.getElementById("testing");
+
+  // fill in starting values for testing form
+  inpClusterSize.value = CLUSTERSIZE;
+  inpShotSpeed.value = SHOTSPEED;
+  inpDropSpeed.value = INTERVAL;
+  inpDeltaY.value = DELTA;
 
   // these must be Object as we append extra props
   let divBarrel = document.getElementById("barrel");
   let divRound = document.getElementById("round");
   let divGun = document.getElementById("gun");
 
+  let anmWords = setInterval(animation, INTERVAL);
+  let anmShot = setInterval(moveshot, SHOTSPEED);
+
   /******************************************************************/
   /************  parameter testing ******************************'***/
-  /**************************************************************
-  document.getElementById("testing").addEventListener("click", testing);
-  function testing(e:Event) {
-    CLUSTERSIZE = (document.getElementById("clustersize"):any).valueAsNumber;
-    SHOTSPEED = (document.getElementById("shotspeed"):any).valueAsNumber;
-    INTERVAL = (document.getElementById("anispeed"):any).valueAsNumber;
+  /**************************************************************/
+  //*
+  document.getElementById("testing").addEventListener("change", testing);
+  function testing(e) {
+    CLUSTERSIZE = inpClusterSize.valueAsNumber;
+    SHOTSPEED = inpShotSpeed.valueAsNumber;
+    INTERVAL = inpDropSpeed.valueAsNumber;
+    DELTA = inpDeltaY.valueAsNumber;
+    INCREMENT = SHOTSPEED * DELTA / INTERVAL;
+    clearInterval(anmWords);
+    clearInterval(anmShot);
+    anmWords = setInterval(animation, INTERVAL);
+    anmShot = setInterval(moveshot, SHOTSPEED);
   }
-   
-   /**
+  //*/
+
+
+  /**
    * (1) A named function just to make commenting easier
    * Creates a span for each word, calcs width in px
    */
@@ -204,9 +284,6 @@ function startGame(task, selected, user) {
   divRound.ammotype = "";
 
   restartCluster();
-
-  let anmWords = setInterval(animation, INTERVAL);
-  let anmShot = setInterval(moveshot, SHOTSPEED);
 
   divFire.addEventListener("mousedown", fireRound);
 

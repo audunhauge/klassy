@@ -33,6 +33,18 @@ div.badge.green:before {
     background:green;
 }
 
+div.badge.pink:before {
+    background:deeppink;
+}
+
+div.badge.cyan:before {
+    background:darkcyan;
+}
+
+div.badge.black:before {
+    background:black;
+}
+
 div.badge.ok:after {
     content: "v";
     text-align:center;
