@@ -37,19 +37,6 @@
         "saltvann": "torsk,sei,lyr"
       }
     },
-    "Matte-001": {
-      "badge": {
-        "text": "Matte",
-        "klass": "black",
-        "par": 42
-      },
-       "groups": {
-        "x²-9": "(x-3)(x+3)",
-        "x²+6x+8": "(x+2)(x+4)",
-        "x²-3x-10": "(x-5)(x+2)",
-        "areal": "½*a*b*sin(v)"
-      }
-    },
     "EngelskTysk-001": {
       "badge": {
         "text": "Språk",

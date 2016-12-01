@@ -8,5 +8,10 @@
       "filename":"matte.json",
       "description":"Matte-oppgaver",
       "minxp":50
+    },
+    "Geografi": {
+      "filename":"geografi.json",
+      "description":"Byer og land",
+      "minxp":50
     }
 }

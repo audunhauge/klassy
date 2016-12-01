@@ -32,7 +32,7 @@ function failed(e, url) {
   klasses["bær"] = "rips,multe,solbær,bringebær";
   klasses["frukt"] = "eple,pærer,appelsin";
   klasses["nøtter"] = "mandler,pistasj,hasselnøtt";
-  startGame(klasses, 'Fruk', user);
+  startGame({ groups: klasses, badge: { text: "Frukt", klass: "black", par: 42 } }, 'Fruk', user);
 }
 
 function behandle(data) {
@@ -82,11 +82,13 @@ function pickAList(user) {
   let selected;
   if (todo.length > 0) {
     selected = todo[0];
+    startGame(tasks[selected], selected, user);
   } else {
-    selected = lessons[0];
+    getUserSelection(user);
   }
-  startGame(tasks[selected], selected, user);
 }
+
+function userCompletedALesson(user) {}
 
 function getUserSelection(user) {
   let divMessages = document.getElementById("messages");
