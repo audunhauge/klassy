@@ -1,0 +1,43 @@
+{
+  "tasks":{
+     "Norge-001": {
+      "badge": {
+        "text": "Norge",
+        "klass": "red",
+        "par": 42
+      },
+       "groups": {
+        "Rogaland":"Stavanger,Haugesund",
+        "Hordaland":"Bergen,Os,Voss"  
+      }
+     },
+    "Skandinavia-001": {
+      "badge": {
+        "text": "Skand",
+        "klass": "green",
+        "par": 122
+      },
+      "groups": {
+          "Norge":"Oslo,Bergen,Trondheim",
+          "Sverige":"Stockholm,Gøteborg,Malmø",
+          "Finland":"Helsinki,Åbo,Tammerfors",
+          "Island":"Reykjavik,Erikstadir,Akureyri",
+          "Danmark":"København,Odense,Ålgaard"
+      }
+    },
+    "Europa-001": {
+      "badge": {
+        "text": "Euro",
+        "klass": "red",
+        "par": 122
+      },
+      "groups": {
+          "UK":"Birmingham,London,Hull",
+          "France":"Paris,Nice,Tolouse",
+          "Germany":"Bonn,Berlin,Køln",
+          "Spain":"Madrid,Toledo,Tarragona",
+          "Italy":"Milano,Roma,Firenze"
+      }
+    }
+ }
+}

@@ -1,0 +1,45 @@
+{
+  "tasks":{
+     "Matte-faktorisering-001": {
+      "badge": {
+        "text": "Faktor",
+        "klass": "black",
+        "par": 42
+      },
+       "groups": {
+        "x²-9": "(x-3)(x+3)",
+        "x²+6x+8": "(x+2)(x+4)",
+        "x²+12x+36": "(x+6)²",
+        "x²+6x": "x(x+6)",
+        "x²-¼": "(x+½)(x-½)",
+        "x²-3x-10": "(x-5)(x+2)"
+      }
+     },
+    "Derivert-001": {
+      "badge": {
+        "text": "Deriv",
+        "klass": "black",
+        "par": 122
+      },
+      "groups": {
+        "sin(x)": "cos(x)",  
+        "e^(x)": "e^(x)",
+        "ln(x)": "1/x",
+        "tan(x)": "1+tan²(x)"
+      }
+    },
+    "Potenser-001": {
+      "badge": {
+        "text": "Potens",
+        "klass": "red",
+        "par": 122
+      },
+      "groups": {
+        "32⁰": "1",  
+        "2³": "8",
+        "3²": "9",
+        "10⁻²": "0.01"
+      }
+    }
+ }
+}
