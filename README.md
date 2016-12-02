@@ -1,11 +1,25 @@
 # klassy
-Drag words into correct class
+Choose correct ammo and shoot down words belonging to this class
+<pre>
 
-This is the first demo-version
+      london
+          
+          paris
 
-You can not yet add wordlists to the game.
-To change the word-list you must edit klassy.js 
-(for testing do this in build)
+    oslo
+            *
+
+
+           ||
+           ||
+    norway  uk  /france/
+
+</pre>
+Asci art showing user has selected france as ammo to shoot down paris.
+The words above the cannon are dropping down.
+
+index.json contains list of filenames (json)
+with the words/categories to show in the game.
 
 NOTE src is annotated for flow and babel
 check .bablerc and package.json for setup
