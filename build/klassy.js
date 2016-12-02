@@ -60,9 +60,9 @@ function choosePath(user) {
 }
 
 function chooseWordlist(user) {
-  let active = user.path.active;
+  let active = user.path.active || 'Basis';
   let subject = subjects[active];
-  let url = subject.filename;
+  let url = subject.filename || "basis.json";
   if (cache[url]) {
     wordlist = cache[url];
     pickAList(user);

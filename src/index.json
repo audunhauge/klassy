@@ -2,16 +2,31 @@
     "Basis": {
      "filename":"basis.json",
      "description":"Eksempel uten større læringsutbytte",
+     "intro":"Lær å skille mellom frukt og grønt.<p>Vel riktig kategori og skyt ned matchende ord.",
      "minxp":0
     },
     "Matte": {
       "filename":"matte.json",
       "description":"Matte-oppgaver",
+      "intro":"Enkel derivering, faktorisering. Skyt ned med riktig ammo",
+      "minxp":50
+    },
+     "Naturfag": {
+      "filename":"naturfag.json",
+      "description":"Naturfag-oppgaver",
+      "intro":"Abiotiske og biotiske faktorer. Skyt ned med riktig ammo",
+      "minxp":50
+    },
+     "Engelsk": {
+      "filename":"engelsk.json",
+      "description":"Oppgaver i engelsk",
+      "intro":"Sterke/svake verb i engelsk. Skyt ned med riktig ammo",
       "minxp":50
     },
     "Geografi": {
       "filename":"geografi.json",
       "description":"Byer og land",
+      "intro":"Velg riktig land og skyt ned byene.",
       "minxp":50
     }
 }

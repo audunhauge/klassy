@@ -6,6 +6,7 @@
         "klass": "red",
         "par": 42
       },
+      "intro":"Velg riktig fylke og skyt ned byene. Vestnorske byer.",
        "groups": {
         "Rogaland":"Stavanger,Haugesund",
         "Hordaland":"Bergen,Os,Voss"  
@@ -17,6 +18,7 @@
         "klass": "green",
         "par": 122
       },
+      "intro":"Velg riktig land og skyt ned byene. Skandinaviske byer.",
       "groups": {
           "Norge":"Oslo,Bergen,Trondheim",
           "Sverige":"Stockholm,Gøteborg,Malmø",
@@ -31,6 +33,7 @@
         "klass": "red",
         "par": 122
       },
+      "intro":"Velg riktig land og skyt ned byene. Europeiske byer.",
       "groups": {
           "UK":"Birmingham,London,Hull",
           "France":"Paris,Nice,Tolouse",
