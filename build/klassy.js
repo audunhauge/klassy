@@ -84,11 +84,57 @@ function pickAList(user) {
     selected = todo[0];
     startGame(tasks[selected], selected, user);
   } else {
-    getUserSelection(user);
+    userCompletedALesson(user);
   }
 }
 
-function userCompletedALesson(user) {}
+function showBadges(user, divB) {
+  divB.innerHTML = ''; // wipe out existing badges
+  for (let badgeUri in user.completed) {
+    let badge = user.completed[badgeUri];
+    let timing = 0;
+    if (badge.time < badge.par) {
+      timing = badge.time;
+    }
+    divB.appendChild(makeBadge(badge, { extra: "", timing: timing }));
+  }
+}
+
+function makeBadge(badge, frills = { extra: "", timing: "", checked: false }) {
+  let divBadge = document.createElement('div');
+  divBadge.className = 'badge ' + badge.klass;
+  let inner = '<span class="info">' + badge.title + '</span>';
+  if (frills.timing) {
+    // the badge has a time achivement
+    inner += '<span class="timing">' + frills.timing + 's</span>';
+  }
+  if (frills.extra) {
+    let extra = frills.extra.split(',');
+    divBadge.classList.add(...extra);
+  }
+  divBadge.innerHTML = inner;
+  return divBadge;
+}
+
+function userCompletedALesson(user) {
+  let divMessages = document.getElementById("messages");
+  let divBadgebox = document.getElementById("badgebox");
+  let divInfo = document.getElementById("info");
+  let form = `<form>
+    Well done ${ user.firstname } ${ user.lastname }!
+    <p>
+    You have now completed the lesson ${ user.path.active }
+    <br><button id="continue" type="button">Continue</button>
+  </form>`;
+  divInfo.innerHTML = form;
+  showBadges(user, divBadgebox);
+  divMessages.classList.add("show");
+  let btnContinue = document.getElementById("continue");
+  btnContinue.addEventListener("click", continueGame);
+  function continueGame(e) {
+    getUserSelection(user);
+  }
+}
 
 function getUserSelection(user) {
   let divMessages = document.getElementById("messages");
@@ -436,14 +482,7 @@ function startGame(task, selected, user) {
     localStorage.setItem("klassy_game", JSON.stringify(user));
     let s = `<h1>Winner ${ user.firstname }</h1>` + `Du brukte ${ timeUsed.toFixed(0) } sekunder. ` + `Du har tjent ${ deltaXP } ` + `og har nå ${ user.xp } XP` + '<h2>Dine medaljer</h2>';
     divInfo.innerHTML = s;
-    for (let badgeUri in user.completed) {
-      let badge = user.completed[badgeUri];
-      let timing = 0;
-      if (badge.time < badge.par) {
-        timing = badge.time;
-      }
-      divBadgebox.appendChild(makeBadge(badge, { extra: "", timing: timing }));
-    }
+    showBadges(user, divBadgebox);
     divMessages.classList.add("show");
     let btnRestart = document.createElement('button');
     divInfo.appendChild(btnRestart);
@@ -461,22 +500,6 @@ function startGame(task, selected, user) {
     clearInterval(anmShot);
     clearInterval(anmWords);
     choosePath(user);
-  }
-
-  function makeBadge(badge, frills = { extra: "", timing: "", checked: false }) {
-    let divBadge = document.createElement('div');
-    divBadge.className = 'badge ' + badge.klass;
-    let inner = '<span class="info">' + badge.title + '</span>';
-    if (frills.timing) {
-      // the badge has a time achivement
-      inner += '<span class="timing">' + frills.timing + 's</span>';
-    }
-    if (frills.extra) {
-      let extra = frills.extra.split(',');
-      divBadge.classList.add(...extra);
-    }
-    divBadge.innerHTML = inner;
-    return divBadge;
   }
 }
 
