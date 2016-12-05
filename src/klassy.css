@@ -130,19 +130,32 @@ div.gold {
 }
 
 #messages {
+    padding:10px;
     position:absolute;
     text-align: center;
     border-radius: 10%;
-    border: solid gold 2px;
+    border: solid gray 2px;
+    background: whitesmoke;
     z-index: 10;
     width: 400px;
-    height: 300px;
+    height: 320px;
     left: -600px;
     top: 0px;
     background: white;
+    box-shadow: 3px 3px 3px rgba(40,40,40,.4);
 }
 
 #messages.show {
     left:50px;
     top:50px;
+}
+
+#messages form input {
+    margin:3px;
+}
+#btn {
+    position: absolute;
+    bottom: 10px;
+    text-align: center;
+    width:90%;
 }

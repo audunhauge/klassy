@@ -87,6 +87,7 @@ div.badge > span.timing {
 }
 
 #badgebox {
+    margin-top:8px;
     display:flex;
     justify-content: center;
     flex-wrap: wrap;

@@ -1,11 +1,12 @@
 {
-  "tasks":{
+  "tasks": {
     "MatVekster-001": {
       "badge": {
         "text": "Mat",
         "klass": "green",
         "par": 172
       },
+      "random":2,
       "groups": {
         "grønnsaker": "gulerot,kål,salat,paprika,spinat",
         "sopp": "kantarell,trøffel,sjampingjong,morkel",
@@ -20,6 +21,7 @@
         "klass": "red",
         "par": 122
       },
+      "random":1,
       "groups": {
         "klovdyr": "sau,geit",
         "mårdyr": "mink,mår,røyskatt",
@@ -43,7 +45,8 @@
         "klass": "white",
         "par": 42
       },
-       "groups": {
+      "random":1,
+      "groups": {
         "Stol": "Stuhl,Chair",
         "Hus": "Haus,House",
         "Mus": "Maus,Mouse",
@@ -66,6 +69,6 @@
         "Katt": "Katze",
         "Man": "Mann"
       }
-     }
+    }
   }
 }

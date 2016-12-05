@@ -1,30 +1,32 @@
 {
-  "tasks":{
-     "Norge-001": {
+  "tasks": {
+    "Norge-001": {
       "badge": {
         "text": "Norge",
         "klass": "red",
         "par": 42
       },
-      "intro":"Velg riktig fylke og skyt ned byene. Vestnorske byer.",
-       "groups": {
-        "Rogaland":"Stavanger,Haugesund",
-        "Hordaland":"Bergen,Os,Voss"  
+      "random":1,
+      "intro": "Velg riktig fylke og skyt ned byene. Vestnorske byer.",
+      "groups": {
+        "Rogaland": "Stavanger,Haugesund",
+        "Hordaland": "Bergen,Os,Voss"
       }
-     },
+    },
     "Skandinavia-001": {
       "badge": {
         "text": "Skand",
         "klass": "green",
         "par": 122
       },
-      "intro":"Velg riktig land og skyt ned byene. Skandinaviske byer.",
+      "random":2,
+      "intro": "Velg riktig land og skyt ned byene. Skandinaviske byer.",
       "groups": {
-          "Norge":"Oslo,Bergen,Trondheim",
-          "Sverige":"Stockholm,Gøteborg,Malmø",
-          "Finland":"Helsinki,Åbo,Tammerfors",
-          "Island":"Reykjavik,Erikstadir,Akureyri",
-          "Danmark":"København,Odense,Ålgaard"
+        "Norge": "Oslo,Bergen,Trondheim,Bodø,Haugesund,Stavanger",
+        "Sverige": "Stockholm,Gøteborg,Malmø,Karlstad",
+        "Finland": "Helsinki,Åbo,Tammerfors,Rovanjemi",
+        "Island": "Reykjavik,Erikstadir,Akureyri",
+        "Danmark": "København,Odense,Ålgaard,Kolding,Middelfart"
       }
     },
     "Europa-001": {
@@ -33,14 +35,15 @@
         "klass": "red",
         "par": 122
       },
-      "intro":"Velg riktig land og skyt ned byene. Europeiske byer.",
+      "random":1,
+      "intro": "Velg riktig land og skyt ned byene. Europeiske byer.",
       "groups": {
-          "UK":"Birmingham,London,Hull",
-          "France":"Paris,Nice,Tolouse",
-          "Germany":"Bonn,Berlin,Køln",
-          "Spain":"Madrid,Toledo,Tarragona",
-          "Italy":"Milano,Roma,Firenze"
+        "UK": "Birmingham,London,Hull",
+        "France": "Paris,Nice,Tolouse",
+        "Germany": "Bonn,Berlin,Køln",
+        "Spain": "Madrid,Toledo,Tarragona",
+        "Italy": "Milano,Roma,Firenze"
       }
     }
- }
+  }
 }

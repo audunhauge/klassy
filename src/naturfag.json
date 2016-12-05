@@ -1,0 +1,17 @@
+{
+    "tasks": {
+        "Økologi-001": {
+            "badge": {
+                "text": "Bio",
+                "klass": "red",
+                "par": 42
+            },
+            "random": 1,
+            "intro": "Skyt ned biotiske/abiotiske faktorer, velg riktig ammo",
+            "groups": {
+                "Abiotisk": "Snø,Regn,Jordskred,Tørke,Flom",
+                "Biotisk": "Sykdom,Parasitter,Stress,Konkuranse,Skygge,Predasjon"
+            }
+        }
+    }
+}

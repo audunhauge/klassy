@@ -1,0 +1,17 @@
+{
+    "tasks": {
+        "Engelske-verb-001": {
+            "badge": {
+                "text": "Eng",
+                "klass": "blue",
+                "par": 42
+            },
+            "random": 2,
+            "intro": "Skyt ned sterke, svake verb, velg riktig ammo",
+            "groups": {
+                "Sterk": "awke,be,bid,cost,do,eat,fly,go,hide,lend,make,pay,run,ride,see,saw,take,wake,win",
+                "Svak": "amuse,ask,beg,boil,dry,enjoy,fit,hate,itch,join,knit,nod,open,pull,rely,skip,tip,wink"
+            }
+        }
+    }
+}
